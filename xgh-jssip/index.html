@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JsSIP Example</title>
+    <script src="jssip-3.10.0.js"></script>
+</head>
+
+<body>
+    <h1>JsSIP Example</h1>
+    <script>
+        //var socket = new JsSIP.WebSocketInterface('ws://10.1.2.27:10080');
+        var socket = new JsSIP.WebSocketInterface('ws://10.1.2.27:8088');
+        var configuration = {
+            sockets: [socket],
+            uri: 'sip:1935@10.1.2.40',
+            password: '1935'
+        };
+
+        var coolPhone = new JsSIP.UA(configuration);
+
+        coolPhone.on('connected', function (e) {
+            debugger;
+            console.log('// connected // ' + (e ? JSON.stringify(e) : 'no event data'));
+        });
+        coolPhone.on('disconnected', function (e) {
+            debugger;
+            console.log('// disconnected // ' + (e ? JSON.stringify(e) : 'no event data'));
+        });
+        coolPhone.on('newRTCSession', function (e) {
+            debugger;
+            //console.log('// newRTCSession // ' + (e ? JSON.stringify(e) : 'no event data'));
+            console.log('// newRTCSession // ');
+        });
+        coolPhone.on('newMessage', function (e) {
+            debugger;
+            console.log('// newMessage // ' + (e ? JSON.stringify(e) : 'no event data'));
+        });
+        coolPhone.on('registered', function (e) {
+            debugger;
+            console.log('// registered // ' + (e ? JSON.stringify(e) : 'no event data'));
+        });
+        coolPhone.on('unregistered', function (e) {
+            debugger;
+            console.log('// unregistered // ' + (e ? JSON.stringify(e) : 'no event data'));
+        });
+        coolPhone.on('registrationFailed', function (e) {
+            debugger;
+            console.log('// registrationFailed // ' + (e ? JSON.stringify(e) : 'no event data'));
+        });
+
+        coolPhone.start();
+
+        // Register callbacks to desired call events
+        var eventHandlers = {
+            'progress': function (e) {
+                debugger;
+                console.log('call is in progress' + (e ? JSON.stringify(e) : 'no event data'));
+            },
+            'failed': function (e) {
+                debugger;
+                console.log('call failed with cause: ' + e.cause);
+            },
+            'ended': function (e) {
+                debugger;
+                console.log('call ended with cause: ' + e.cause);
+            },
+            'confirmed': function (e) {
+                debugger;
+                console.log('call confirmed' + (e ? JSON.stringify(e) : 'no event data'));
+            }
+        };
+
+        var options = {
+            'eventHandlers': eventHandlers,
+            'mediaConstraints': { 'audio': true, 'video': false }
+        };
+
+        var session = coolPhone.call('sip:1932@10.1.2.40', options);
+    </script>
+</body>
+
+</html>
